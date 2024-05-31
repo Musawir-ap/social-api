@@ -7,7 +7,7 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/api/login/ 
 Content-Type: application/json
 
-{ "email": "test1@test.com", "password": "test" }
+{ "email": "test4@test.com", "password": "test" }
 
 ###
 
@@ -22,5 +22,19 @@ Authorization: Token 7ab7f32c8a08866c39f1019d1211b07dd79beea0
 ###
 
 # Send a friend request
-POST http://localhost:8000/api/send_request/3/
+POST http://localhost:8000/api/send_request/4/
 Authorization: Token 7ab7f32c8a08866c39f1019d1211b07dd79beea0
+
+###
+
+# Accept a friend request
+POST http://localhost:8000/api/accept_request/1/
+Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
+
+
+###
+
+# Reject a friend request
+POST http://localhost:8000/api/reject_request/3/
+Authorization: Token 080273ed9609759329ef110e4867cac6ee293b67
+

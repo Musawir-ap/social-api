@@ -104,3 +104,23 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
         else:
              return Response({'status': 'Friend request already sent'}, status=status.HTTP_400_BAD_REQUEST)
             
+    @action(detail=True, methods=['POST'])
+    def accept_request(self, request, pk=None):
+        try:
+            friend_request = FriendRequest.objects.get(pk=pk, receiver=request.user, status='sent')
+            friend_request.status = 'accepted'
+            friend_request.save()
+            return Response({'status': 'Friend request accepted'}, status=status.HTTP_200_OK)
+        except FriendRequest.DoesNotExist:
+            return Response({'error': 'Friend request not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+    @action(detail=True, methods=['POST'])
+    def reject_request(self, request, pk=None):
+        try:
+            friend_request = FriendRequest.objects.get(pk=pk, receiver=request.user, status='sent')
+            friend_request.status = 'rejected'
+            friend_request.save()
+            return Response({'status': 'Friend request rejected'}, status=status.HTTP_200_OK)
+        except FriendRequest.DoesNotExist:
+            return Response({'error': 'Friend request not found'}, status=status.HTTP_404_NOT_FOUND)
