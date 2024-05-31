@@ -10,6 +10,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from .serializers import UserSerializer
 from rest_framework.authtoken.models import Token
+from rest_framework.pagination import PageNumberPagination
 
 
 User = get_user_model()
@@ -44,11 +45,17 @@ class LoginView(APIView):
         else:
             return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
    
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
    
 class UserSearchViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    pageination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         search_query = self.request.query_params.get('q', '')
@@ -56,3 +63,12 @@ class UserSearchViewSet(viewsets.ReadOnlyModelViewSet):
             return User.objects.filter(email__iexact=search_query)
         else:
             return User.objects.filter(username__icontains=search_query)
+        
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

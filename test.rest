@@ -18,3 +18,8 @@ Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
 
 GET http://127.0.0.1:8000/api/search/?q=tes
 Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
+
+###
+
+GET http://127.0.0.1:8000/api/search/?q=tes
+Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
