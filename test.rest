@@ -1,10 +1,20 @@
-POST http://127.0.0.1:8000/user/register 
+POST http://127.0.0.1:8000/api/register 
 Content-Type: application/json
 
-{ "username": "holaaa", "password": "test", "email": "holaaa@mail.com" }
+{ "username": "testuser", "password": "test", "email": "test@test.com" }
 
 ###
-POST http://127.0.0.1:8000/user/login 
+POST http://127.0.0.1:8000/api/login 
 Content-Type: application/json
 
 { "email": "TeSt@test.com", "password": "test" }
+
+###
+
+GET http://127.0.0.1:8000/api/search/?q=test@test.com
+Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
+
+###
+
+GET http://127.0.0.1:8000/api/search/?q=tes
+Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
