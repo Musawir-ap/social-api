@@ -4,22 +4,23 @@ Content-Type: application/json
 { "username": "testuser", "password": "test", "email": "test@test.com" }
 
 ###
-POST http://127.0.0.1:8000/api/login 
+POST http://127.0.0.1:8000/api/login/ 
 Content-Type: application/json
 
-{ "email": "TeSt@test.com", "password": "test" }
+{ "email": "test1@test.com", "password": "test" }
 
 ###
 
 GET http://127.0.0.1:8000/api/search/?q=test@test.com
-Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
+Authorization: Token 7ab7f32c8a08866c39f1019d1211b07dd79beea0
 
 ###
 
-GET http://127.0.0.1:8000/api/search/?q=tes
-Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
+GET http://127.0.0.1:8000/api/search/?q=TES
+Authorization: Token 7ab7f32c8a08866c39f1019d1211b07dd79beea0
 
 ###
 
-GET http://127.0.0.1:8000/api/search/?q=tes
-Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
+# Send a friend request
+POST http://localhost:8000/api/send_request/3/
+Authorization: Token 7ab7f32c8a08866c39f1019d1211b07dd79beea0
