@@ -7,7 +7,18 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/api/login/ 
 Content-Type: application/json
 
-{ "email": "test4@test.com", "password": "test" }
+{ "email": "test5@test.com", "password": "test" }
+
+#user1 7ab7f32c8a08866c39f1019d1211b07dd79beea0
+#user2 ea24d9140da5ad2320180b9e871f0b79b54c765e
+#user3 23bb820827988b13fcdaa0cb806ddcce90e542a4
+#user4 080273ed9609759329ef110e4867cac6ee293b67
+#user5 a5f78a54ae434d3f9a742628bfb62f681132e752
+#user6 f752fd62659eb135348d66bf1aeddbe45d911b51
+#user7 4523fa09f1c8b53bdb9dc16f5aced15189ee9c3f
+#user8 
+#user9 
+#user10 
 
 ###
 
@@ -31,10 +42,24 @@ Authorization: Token 7ab7f32c8a08866c39f1019d1211b07dd79beea0
 POST http://localhost:8000/api/accept_request/1/
 Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
 
-
 ###
 
 # Reject a friend request
-POST http://localhost:8000/api/reject_request/3/
+POST http://localhost:8000/api/reject_request/1/
 Authorization: Token 080273ed9609759329ef110e4867cac6ee293b67
+
+###
+
+# List Friends
+GET http://localhost:8000/api/friends/
+Authorization: Token ea24d9140da5ad2320180b9e871f0b79b54c765e
+
+
+###
+
+# List pending friend requests
+GET http://localhost:8000/api/pending_requests/
+Authorization: Token 080273ed9609759329ef110e4867cac6ee293b67
+
+
 

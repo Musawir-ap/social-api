@@ -92,25 +92,35 @@ class FriendRequestRateThrottle(UserRateThrottle):
 class FriendRequestViewSet(viewsets.ModelViewSet):
     queryset = FriendRequest.objects.all()
     serializer_class = FriendRequestSerializer
-    throttle_classes = [FriendRequestRateThrottle]
+    # throttle_classes = [FriendRequestRateThrottle]
     permission_classes = [IsAuthenticated]
+    
+    def get_throttles(self):
+        if self.action == 'send_request':
+            self.throttle_classes = [FriendRequestRateThrottle]
+        return super().get_throttles()
 
     @action(detail=True, methods=['POST'])
     def send_request(self, request, pk=None):
+        if request.user.pk == pk:
+            return Response({'error': 'Cannot send friend request to yourself'}, status=status.HTTP_400_BAD_REQUEST)
+
         receiver = User.objects.get(pk=pk)
         friend_request, created = FriendRequest.objects.get_or_create(sender=request.user, receiver=receiver)
         if created:
-             return Response({'status': 'Friend request sent'}, status=status.HTTP_201_CREATED)
+             return Response({'status': f'Friend request sent to {friend_request.receiver.email}'}, status=status.HTTP_201_CREATED)
         else:
              return Response({'status': 'Friend request already sent'}, status=status.HTTP_400_BAD_REQUEST)
             
     @action(detail=True, methods=['POST'])
     def accept_request(self, request, pk=None):
         try:
-            friend_request = FriendRequest.objects.get(pk=pk, receiver=request.user, status='sent')
+            sender = User.objects.get(pk=pk)
+            friend_request = FriendRequest.objects.get(sender=sender, receiver=request.user, status='sent')
             friend_request.status = 'accepted'
             friend_request.save()
-            return Response({'status': 'Friend request accepted'}, status=status.HTTP_200_OK)
+            friend_request.sender.friends.add(friend_request.receiver)
+            return Response({'status': f'{sender.email}\'s friend request accepted'}, status=status.HTTP_200_OK)
         except FriendRequest.DoesNotExist:
             return Response({'error': 'Friend request not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -118,9 +128,35 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['POST'])
     def reject_request(self, request, pk=None):
         try:
-            friend_request = FriendRequest.objects.get(pk=pk, receiver=request.user, status='sent')
+            sender = User.objects.get(pk=pk)
+            friend_request = FriendRequest.objects.get(sender=sender, receiver=request.user, status='sent')
             friend_request.status = 'rejected'
             friend_request.save()
-            return Response({'status': 'Friend request rejected'}, status=status.HTTP_200_OK)
+            return Response({'status': f'{sender.email}\'s Friend request rejected'}, status=status.HTTP_200_OK)
         except FriendRequest.DoesNotExist:
             return Response({'error': 'Friend request not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=True, methods=['get'])
+    def friends(self, request, pk=None):
+        friends = request.user.friends.all()
+        if friends.exists():
+            serializer = UserSerializer(friends, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'No friends found'}, status=status.HTTP_200_OK)
+    
+
+    @action(detail=True, methods=['get'])
+    def pending_requests(self, request, pk=None):
+        pending_requests = FriendRequest.objects.filter(receiver=request.user, status='sent')
+        if pending_requests.exists():
+            serializer = FriendRequestSerializer(pending_requests, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'No pending friend requests'}, status=status.HTTP_200_OK)
