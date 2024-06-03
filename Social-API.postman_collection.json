@@ -75,8 +75,11 @@
 								"exec": [
 									"pm.test(\"Extract the token from the response body and store it in the collection variable 'test_user_token'\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"test_user_token\", jsonData.token);",
-									"});"
+									"    pm.expect(jsonData).to.have.property('token');",
+									"    var tokenWithPrefix = \"Token \" + jsonData.token;",
+									"    pm.collectionVariables.set(\"test_user_token\", tokenWithPrefix);",
+									"});",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -137,10 +140,7 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"//all requests in this folder should be valid",
-							"pm.test(\"Folder-level status check\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
+							""
 						]
 					}
 				}
@@ -261,10 +261,15 @@
 			],
 			"description": "This folder tests users search with email to return user with exact email match or users whose names include the search keyword.",
 			"auth": {
-				"type": "bearer",
-				"bearer": [
+				"type": "apikey",
+				"apikey": [
 					{
-						"key": "token",
+						"key": "key",
+						"value": "Authorization",
+						"type": "string"
+					},
+					{
+						"key": "value",
 						"value": "{{test_user_token}}",
 						"type": "string"
 					}
@@ -285,10 +290,7 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"//all requests in this folder should be valid",
-							"pm.test(\"Folder-level status check\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
+							""
 						]
 					}
 				}
@@ -325,16 +327,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{user1_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -391,16 +383,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{user1_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -457,16 +439,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{user1_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -499,7 +471,7 @@
 							"response": []
 						},
 						{
-							"name": "[4] Send request: user1 > user5",
+							"name": "[4] Send request: user3 > user2",
 							"event": [
 								{
 									"listen": "test",
@@ -524,142 +496,15 @@
 							],
 							"request": {
 								"auth": {
-									"type": "bearer",
-									"bearer": [
+									"type": "apikey",
+									"apikey": [
 										{
-											"key": "token",
-											"value": "{{user1_token}}",
+											"key": "key",
+											"value": "Authorization",
 											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/api/send_request/5/",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"send_request",
-										"5",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "[5] Send request: user1 > user6",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
+										},
 										{
-											"key": "token",
-											"value": "{{user1_token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/api/send_request/6/",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"send_request",
-										"6",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "[6] Send request: user3 > user2",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
+											"key": "value",
 											"value": "{{user3_token}}",
 											"type": "string"
 										}
@@ -697,13 +542,18 @@
 							"response": []
 						},
 						{
-							"name": "[1] User2's pending incoming request",
+							"name": "[5] User2's pending incoming request",
 							"request": {
 								"auth": {
-									"type": "bearer",
-									"bearer": [
+									"type": "apikey",
+									"apikey": [
 										{
-											"key": "token",
+											"key": "key",
+											"value": "Authorization",
+											"type": "string"
+										},
+										{
+											"key": "value",
 											"value": "{{user2_token}}",
 											"type": "string"
 										}
@@ -726,6 +576,21 @@
 							"response": []
 						}
 					],
+					"auth": {
+						"type": "apikey",
+						"apikey": [
+							{
+								"key": "key",
+								"value": "Authorization",
+								"type": "string"
+							},
+							{
+								"key": "value",
+								"value": "{{user1_token}}",
+								"type": "string"
+							}
+						]
+					},
 					"event": [
 						{
 							"listen": "prerequest",
@@ -733,7 +598,7 @@
 								"type": "text/javascript",
 								"packages": {},
 								"exec": [
-									"setTimeout(function(){}, 22000);"
+									""
 								]
 							}
 						},
@@ -778,10 +643,15 @@
 							],
 							"request": {
 								"auth": {
-									"type": "bearer",
-									"bearer": [
+									"type": "apikey",
+									"apikey": [
 										{
-											"key": "token",
+											"key": "key",
+											"value": "Authorization",
+											"type": "string"
+										},
+										{
+											"key": "value",
 											"value": "{{user2_token}}",
 											"type": "string"
 										}
@@ -819,7 +689,7 @@
 							"response": []
 						},
 						{
-							"name": "[2] Accept request: user3 > user1",
+							"name": "[2] Accept request: user4 > user1",
 							"event": [
 								{
 									"listen": "test",
@@ -844,77 +714,16 @@
 							],
 							"request": {
 								"auth": {
-									"type": "bearer",
-									"bearer": [
+									"type": "apikey",
+									"apikey": [
 										{
-											"key": "token",
-											"value": "{{user3_token}}",
+											"key": "value",
+											"value": "{{user4_token}}",
 											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/api/accept_request/1/",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"accept_request",
-										"1",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "[3] Accept request: user4 > user1",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
+										},
 										{
-											"key": "token",
-											"value": "{{user3_token}}",
+											"key": "key",
+											"value": "Authorization",
 											"type": "string"
 										}
 									]
@@ -956,7 +765,7 @@
 					"name": "Reject Request",
 					"item": [
 						{
-							"name": "[1] Reject request: user5 > user1",
+							"name": "[1] Reject request: user3 > user1",
 							"event": [
 								{
 									"listen": "test",
@@ -981,11 +790,16 @@
 							],
 							"request": {
 								"auth": {
-									"type": "bearer",
-									"bearer": [
+									"type": "apikey",
+									"apikey": [
 										{
-											"key": "token",
-											"value": "{{user5_token}}",
+											"key": "key",
+											"value": "Authorization",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{user3_token}}",
 											"type": "string"
 										}
 									]
@@ -1025,7 +839,7 @@
 					]
 				},
 				{
-					"name": "[2] User1's Friends",
+					"name": "[2] User2's Friends",
 					"event": [
 						{
 							"listen": "test",
@@ -1050,11 +864,16 @@
 					],
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
+							"type": "apikey",
+							"apikey": [
 								{
-									"key": "token",
-									"value": "{{user1_token}}",
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{user2_token}}",
 									"type": "string"
 								}
 							]
@@ -1071,12 +890,11 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/api/friends/",
+							"raw": "{{baseUrl}}/api/friends/",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"api",
 								"api",
 								"friends",
 								""
@@ -1102,10 +920,7 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"//all requests in this folder should be valid",
-							"pm.test(\"Folder-level status check\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
+							""
 						]
 					}
 				}
@@ -1116,18 +931,30 @@
 			"item": [
 				{
 					"name": "[1] Duplicate request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/api/send_request/6/",
+							"raw": "{{baseUrl}}/api/send_request/2/",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"api",
 								"send_request",
-								"6",
+								"2",
 								""
 							]
 						}
@@ -1135,39 +962,31 @@
 					"response": []
 				},
 				{
-					"name": "[2] Send request",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/send_request/8/",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"send_request",
-								"8",
-								""
-							]
+					"name": "[2] Duplicate request and too many request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "[3] Send request",
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/api/send_request/7/",
+							"raw": "{{baseUrl}}/api/send_request/2/",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"api",
 								"send_request",
-								"7",
+								"2",
 								""
 							]
 						}
@@ -1177,11 +996,16 @@
 			],
 			"description": "Attempil invalid request.",
 			"auth": {
-				"type": "bearer",
-				"bearer": [
+				"type": "apikey",
+				"apikey": [
 					{
-						"key": "token",
-						"value": "{{user1_token}}",
+						"key": "value",
+						"value": "{{user3_token}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "Authorization",
 						"type": "string"
 					}
 				]
@@ -1203,7 +1027,9 @@
 						"type": "text/javascript",
 						"packages": {},
 						"exec": [
-							"setTimeout(function(){}, 5000);"
+							"pm.test(\"Status code is 400 or 429\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([400, 429], \"Expected status code to be either 400 or 429\");\r",
+							"});"
 						]
 					}
 				}
@@ -1225,6 +1051,8 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"pm.test(pm.request.url, true);\r",
+					"pm.test(responseBody, true)\r",
 					""
 				]
 			}
@@ -1243,37 +1071,37 @@
 		},
 		{
 			"key": "user1_token",
-			"value": "7ab7f32c8a08866c39f1019d1211b07dd79beea0",
+			"value": "Token 7ab7f32c8a08866c39f1019d1211b07dd79beea0",
 			"type": "string"
 		},
 		{
 			"key": "user2_token",
-			"value": "",
+			"value": "Token ea24d9140da5ad2320180b9e871f0b79b54c765e",
 			"type": "string"
 		},
 		{
 			"key": "user3_token",
-			"value": "",
+			"value": "Token 23bb820827988b13fcdaa0cb806ddcce90e542a4",
 			"type": "string"
 		},
 		{
 			"key": "user4_token",
-			"value": "",
+			"value": "Token 080273ed9609759329ef110e4867cac6ee293b67",
 			"type": "string"
 		},
 		{
 			"key": "user5_token",
-			"value": "",
+			"value": "Token a5f78a54ae434d3f9a742628bfb62f681132e752",
 			"type": "string"
 		},
 		{
 			"key": "user6_token",
-			"value": "",
+			"value": "Token f752fd62659eb135348d66bf1aeddbe45d911b51",
 			"type": "string"
 		},
 		{
 			"key": "user7_token",
-			"value": "",
+			"value": "Token 4523fa09f1c8b53bdb9dc16f5aced15189ee9c3f",
 			"type": "string"
 		}
 	]

@@ -108,7 +108,7 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
         receiver = User.objects.get(pk=pk)
         friend_request, created = FriendRequest.objects.get_or_create(sender=request.user, receiver=receiver)
         if created:
-             return Response({'status': f'Friend request sent to {friend_request.receiver.email}'}, status=status.HTTP_201_CREATED)
+             return Response({'status': f'Friend request sent to {friend_request.receiver.email}'}, status=status.HTTP_200_OK   )
         else:
              return Response({'status': 'Friend request already sent'}, status=status.HTTP_400_BAD_REQUEST)
             
