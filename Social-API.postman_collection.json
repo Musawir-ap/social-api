@@ -1061,7 +1061,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "localhost:8000",
+			"value": "0.0.0.0:8000",
 			"type": "string"
 		},
 		{
